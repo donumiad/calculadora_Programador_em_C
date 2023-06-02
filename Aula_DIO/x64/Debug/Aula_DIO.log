@@ -1,2 +1,8 @@
 ﻿  calculadoraProgramador.cpp
+C:\Users\i5\Documents\0 CURSO DIO C_C++\VS COMPILADOR\Aula_DIO\Aula_DIO\calculadoraProgramador.cpp(72,41): warning C4305: '=': truncamento de 'int' para 'bool'
+C:\Users\i5\Documents\0 CURSO DIO C_C++\VS COMPILADOR\Aula_DIO\Aula_DIO\calculadoraProgramador.cpp(88,41): warning C4305: '=': truncamento de 'int' para 'bool'
+C:\Users\i5\Documents\0 CURSO DIO C_C++\VS COMPILADOR\Aula_DIO\Aula_DIO\calculadoraProgramador.cpp(104,41): warning C4305: '=': truncamento de 'int' para 'bool'
+C:\Users\i5\Documents\0 CURSO DIO C_C++\VS COMPILADOR\Aula_DIO\Aula_DIO\calculadoraProgramador.cpp(225,5): warning C4808: caso '2' não é um valor válido para a condição de alternância do tipo 'bool'
+C:\Users\i5\Documents\0 CURSO DIO C_C++\VS COMPILADOR\Aula_DIO\Aula_DIO\calculadoraProgramador.cpp(228,5): warning C4808: caso '3' não é um valor válido para a condição de alternância do tipo 'bool'
+C:\Users\i5\Documents\0 CURSO DIO C_C++\VS COMPILADOR\Aula_DIO\Aula_DIO\calculadoraProgramador.cpp(231,5): warning C4808: caso '4' não é um valor válido para a condição de alternância do tipo 'bool'
   Aula_DIO.vcxproj -> C:\Users\i5\Documents\0 CURSO DIO C_C++\VS COMPILADOR\Aula_DIO\x64\Debug\Aula_DIO.exe

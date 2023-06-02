@@ -10,14 +10,15 @@
 
 
 int Transformacao(char entrada, char valor_digitado[], int tranforma_char_int[]);
-void operacao(char entrada, long int* resultadoOperacao);
+void operacao(long int* resultadoOperacao);
+void ZerarArray(int tranforma_char_int[], char valor_Digitado[]);
 
 
 const int TAM_MAXIMO_VALOR_DIGITADO = 10;
 int itera = 0;         //Variavel usada para as iterações no laço for
 bool flagTrocaPosOperando = false;   //Esta flag troca o local onde o valor digitado pelo usuário vai ser alocado no array "operandos" 
 bool sinalInserido = false;         //Marca se o usuário ja tinha inserido um simbolo de operação. true -> sim, false -> não.
-
+bool flagMarcaOperacao = 0;          // 1 - soma, 2 - sbtração, 3 - multiplicação, 4 - divisão
 
 int main() {
     char entrada;                   //Irá receber o dado digitado pelo usuário
@@ -41,40 +42,80 @@ int main() {
         if (entrada >= '0' && entrada <= '9') {      //testa se é um caractere está entre 0 e 9.
  
             operandos[flagTrocaPosOperando] = Transformacao(entrada, valor_Digitado, tranforma_char_int); //Retorna o numero ja em inteiro
-            system("cls");
-            printf_s("\nvalor digitado: %ld\n", operandos[flagTrocaPosOperando]);
+            //system("cls");
+            printf_s("\nvalor digitado: %ld", operandos[flagTrocaPosOperando]);
+            //printf_s("\nvalor flagTrocaPosOperando: %b\n", flagTrocaPosOperando);
+            printf_s("\nvalor operandos[0]: %ld", operandos[0]);
+            printf_s("\nvalor operandos[1]: %ld\n", operandos[1]);
             
         }else {                 //Testa se foi digitado um operador
             switch (entrada)
             {
             case '+':
-                if (sinalInserido == false) {  //essa é a primeira vez que o usuário digita um sinal de operação?
+                if (sinalInserido == false) {  // Essa é a primeira vez que o usuário digita um sinal de operação?
                     sinalInserido = true;      //Sim! então marca a flag,
-                    flagTrocaPosOperando = !(flagTrocaPosOperando); //Sim! troca a posição de armazenagem dos operandos
-                    //CHAMA A FUNÇÃO ZERAR     //Zera os arrays auxiliares
+                    flagMarcaOperacao = 1;
+                    flagTrocaPosOperando = !flagTrocaPosOperando; //Sim! troca a posição de armazenagem dos operandos
+                    ZerarArray(tranforma_char_int, valor_Digitado);    //sim! Zera os arrays valor_Digitado[] e tranforma_char_int[]
                 }
-                else {
-                    if (valor_Digitado[0] == '_') {
-                        break;
-                    }else{ operacao(entrada, &resultadoOperacao);
+                else {                         //Não!
+                    if (valor_Digitado[0] == '_') {      // O usuário já inserio algum valor?
+                        break;                           // Não! Ignora o caractere inserido
+                    }else{ 
+                        operacao(&resultadoOperacao);  // Sim! Chama a função para executar a operação desejada
                         }
                 }
                 break;
             case '-':
-                printf_s("\nCHAMA FUNÇÃO\n");
-                //CHAMA FUNÇÃO
+                if (sinalInserido == false) {  // Essa é a primeira vez que o usuário digita um sinal de operação?
+                    sinalInserido = true;      //Sim! então marca a flag,
+                    flagMarcaOperacao = 2;
+                    flagTrocaPosOperando = !(flagTrocaPosOperando); //Sim! troca a posição de armazenagem dos operandos
+                    ZerarArray(tranforma_char_int, valor_Digitado);    //sim! Zera os arrays valor_Digitado[] e tranforma_char_int[]
+                }
+                else {                         //Não!
+                    if (valor_Digitado[0] == '_') {      // O usuário já inserio algum valor?
+                        break;                           // Não! Ignora o caractere inserido
+                    }
+                    else {
+                        operacao(&resultadoOperacao);  // Sim! Chama a função para executar a operação desejada
+                    }
+                }
                 break;
             case '*':
-                printf_s("\nCHAMA FUNÇÃO\n");
-                //CHAMA FUNÇÃO
+                if (sinalInserido == false) {  // Essa é a primeira vez que o usuário digita um sinal de operação?
+                    sinalInserido = true;      //Sim! então marca a flag,
+                    flagMarcaOperacao = 3;
+                    flagTrocaPosOperando = !(flagTrocaPosOperando); //Sim! troca a posição de armazenagem dos operandos
+                    ZerarArray(tranforma_char_int, valor_Digitado);    //sim! Zera os arrays valor_Digitado[] e tranforma_char_int[]
+                }
+                else {                         //Não!
+                    if (valor_Digitado[0] == '_') {      // O usuário já inserio algum valor?
+                        break;                           // Não! Ignora o caractere inserido
+                    }
+                    else {
+                        operacao(&resultadoOperacao);  // Sim! Chama a função para executar a operação desejada
+                    }
+                }
                 break;
             case '/':
-                printf_s("\nCHAMA FUNÇÃO\n");
-                //CHAMA FUNÇÃO
+                if (sinalInserido == false) {  // Essa é a primeira vez que o usuário digita um sinal de operação?
+                    sinalInserido = true;      //Sim! então marca a flag,
+                    flagMarcaOperacao = 4;
+                    flagTrocaPosOperando = !(flagTrocaPosOperando); //Sim! troca a posição de armazenagem dos operandos
+                    ZerarArray(tranforma_char_int, valor_Digitado);    //sim! Zera os arrays valor_Digitado[] e tranforma_char_int[]
+                }
+                else {                         //Não!
+                    if (valor_Digitado[0] == '_') {      // O usuário já inserio algum valor?
+                        break;                           // Não! Ignora o caractere inserido
+                    }
+                    else {
+                        operacao(&resultadoOperacao);  // Sim! Chama a função para executar a operação desejada
+                    }
+                }
                 break;
             case '\n':
-                printf_s("\nCHAMA FUNÇÃO\n");
-                //CHAMA FUNÇÃO CALCULO
+                operacao(&resultadoOperacao);
                 break;
              default:
                  break;
@@ -174,8 +215,35 @@ int Transformacao(char entrada, char valor_digitado[], int tranforma_char_int[])
 }
 
 
-void operacao(char entrada, long int *resultadoOperacao) {
+void operacao(long int *resultadoOperacao) {
 
+    switch (flagMarcaOperacao)
+    {
+    case 1:
+        printf_s("\nusuário solicitou a operação SOMA\n");
+        break;
+    case 2:
+        printf_s("\nusuário solicitou a operação SUBTRAÇÃO\n");
+        break;
+    case 3:
+        printf_s("\nusuário solicitou a operação DIVISÃO\n");
+        break;
+    case 4:
+        printf_s("\nusuário solicitou a operação MULTIPLICAÇÃO\n");
+        break;
+    default:
+        break;
+    }
+    
 
+    return;
+}
+
+void ZerarArray(int tranforma_char_int[], char valor_Digitado[]) {
+
+    for (itera = 0; itera < TAM_MAXIMO_VALOR_DIGITADO; itera++) {
+        tranforma_char_int[itera] = 0;
+        valor_Digitado[itera] = '_';
+    } 
     return;
 }
