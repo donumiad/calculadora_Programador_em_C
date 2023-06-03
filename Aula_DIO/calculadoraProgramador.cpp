@@ -2,7 +2,7 @@
 #include <conio.h>
 #include <stdlib.h>
 /* Este programa implementa uma calculadora do tipo programador com as seguintes funções e limitações:
-*  Ela irá receber o valor digito em decimal, e mostrará o mesmo valor na forma hexadecimal, octal e binaria
+*  Ela irá receber o valor digitado em decimal, e mostrará o mesmo valor na forma hexadecimal, octal e binaria
 *  O valor digitado pelo usuário terá um limite de 10 digitos.
 *  E será possível fezer o perações de soma, subtração, divisão e multiplicação
 */
@@ -10,19 +10,27 @@
 
 
 int Transformacao(char entrada, char valor_digitado[], int tranforma_char_int[]);
-void operacao(long int* resultadoOperacao);
+void operacao(long int operandos[]);
 void ZerarArray(int tranforma_char_int[], char valor_Digitado[]);
 
 
+//****************************DECLARAÇÃO DAS VARIÁVEIS GLOBAIS*********************************************
 const int TAM_MAXIMO_VALOR_DIGITADO = 10;
-int itera = 0;         //Variavel usada para as iterações no laço for
+int itera = 0;                       //Variavel usada para as iterações no laço for
+int flagMarcaOperacao = 0;           // 1 - soma, 2 - sbtração, 3 - multiplicação, 4 - divisão, 5 - resultado
 bool flagTrocaPosOperando = false;   //Esta flag troca o local onde o valor digitado pelo usuário vai ser alocado no array "operandos" 
-bool sinalInserido = false;         //Marca se o usuário ja tinha inserido um simbolo de operação. true -> sim, false -> não.
-bool flagMarcaOperacao = 0;          // 1 - soma, 2 - sbtração, 3 - multiplicação, 4 - divisão
+bool sinalInserido = false;          //Marca se o usuário ja tinha inserido um simbolo de operação. true -> sim, false -> não.
+bool flagNumeroNegativo = false;         // Marca se o usuário quer digitar um numero negativo 0 -> não, 1 -> sim
+//*********************************************************************************************************
+
+
+
 
 int main() {
+    //************************DECLARAÇÃO DAS VARIÁVEIS******************************************************
+
     char entrada;                   //Irá receber o dado digitado pelo usuário
-    long int resultadoOperacao = 0;
+    //long int resultadoOperacao = 0;
     long int operandos[] = { 0, 0 };            //armazena os dois operandos para fazer a operação desejada
     int tranforma_char_int[] = {0,0,0,0,0,0,0,0,0,0};  //Array usado como auxiliar para transformar os valores de char para int
     char valor_Digitado[] = {'_', '_', '_', '_', '_', '_', '_', '_', '_', '_'}; //Armazena a entrada
@@ -31,22 +39,23 @@ int main() {
     *   - Toda vez que o usuário digitar um valor valido, este digito será também armazenado em tranforma_char_int[]
     *   - Depois os digitos seram convertidos no valor real. Por exemplo, caso o usuário digite 4 e depois 5, o digito
     *    4 será armazenado em valor_Digitado[0] e tranforma_char_int[0], e o digito 5 em valor_Digitado[1] 
-    *    tranforma_char_int[1], e então será feito operações para que no array operandos[] seja armazenado o long int 45.
-    *   
+    *    tranforma_char_int[1], e então será feito operações para que no array operandos[] seja armazenado o long int 45.  
     */
-    
+    //********************************************************************************************************
+
+
+
+    //***********************INICIO DO PROGRAMA***************************************************************
     do {
         printf_s("Digite um numero, somente inteiros: ");
         entrada = _getche();
-        
+        //system("cls");
         if (entrada >= '0' && entrada <= '9') {      //testa se é um caractere está entre 0 e 9.
  
             operandos[flagTrocaPosOperando] = Transformacao(entrada, valor_Digitado, tranforma_char_int); //Retorna o numero ja em inteiro
-            //system("cls");
-            printf_s("\nvalor digitado: %ld", operandos[flagTrocaPosOperando]);
-            //printf_s("\nvalor flagTrocaPosOperando: %b\n", flagTrocaPosOperando);
-            printf_s("\nvalor operandos[0]: %ld", operandos[0]);
-            printf_s("\nvalor operandos[1]: %ld\n", operandos[1]);
+            
+            //CHAMA FUNÇÃO MOSTRA RESULTADO
+            
             
         }else {                 //Testa se foi digitado um operador
             switch (entrada)
@@ -62,23 +71,33 @@ int main() {
                     if (valor_Digitado[0] == '_') {      // O usuário já inserio algum valor?
                         break;                           // Não! Ignora o caractere inserido
                     }else{ 
-                        operacao(&resultadoOperacao);  // Sim! Chama a função para executar a operação desejada
+                        operacao(operandos);  // Sim! Chama a função para executar a operação desejada
+                        flagMarcaOperacao = 1;
+                        ZerarArray(tranforma_char_int, valor_Digitado);    //sim! Zera os arrays valor_Digitado[] e tranforma_char_int[]
                         }
                 }
                 break;
             case '-':
-                if (sinalInserido == false) {  // Essa é a primeira vez que o usuário digita um sinal de operação?
-                    sinalInserido = true;      //Sim! então marca a flag,
-                    flagMarcaOperacao = 2;
-                    flagTrocaPosOperando = !(flagTrocaPosOperando); //Sim! troca a posição de armazenagem dos operandos
-                    ZerarArray(tranforma_char_int, valor_Digitado);    //sim! Zera os arrays valor_Digitado[] e tranforma_char_int[]
+                if (sinalInserido == false) {         // é o primeiro sinal de operação?
+                    if (valor_Digitado[0] == '_') {   // Sim! O usuário já digitou algum valor numérico?
+                        flagNumeroNegativo = 2;       //Não digitou nenhum valor numerico! Então marca flag que o usuário quer inserir um valornegativo
+                    }
+                    else {
+                        sinalInserido = true;      //Sim! então marca a flag,
+                        flagMarcaOperacao = 2;
+                        flagTrocaPosOperando = !flagTrocaPosOperando; //Sim! troca a posição de armazenagem dos operandos
+                        ZerarArray(tranforma_char_int, valor_Digitado);    //sim! Zera os arrays valor_Digitado[] e tranforma_char_int[]
+                    }
+                    
                 }
                 else {                         //Não!
                     if (valor_Digitado[0] == '_') {      // O usuário já inserio algum valor?
                         break;                           // Não! Ignora o caractere inserido
                     }
                     else {
-                        operacao(&resultadoOperacao);  // Sim! Chama a função para executar a operação desejada
+                        operacao(operandos);  // Sim! Chama a função para executar a operação desejada
+                        flagMarcaOperacao = 2;
+                        ZerarArray(tranforma_char_int, valor_Digitado);    //sim! Zera os arrays valor_Digitado[] e tranforma_char_int[]
                     }
                 }
                 break;
@@ -94,7 +113,9 @@ int main() {
                         break;                           // Não! Ignora o caractere inserido
                     }
                     else {
-                        operacao(&resultadoOperacao);  // Sim! Chama a função para executar a operação desejada
+                        operacao(operandos);  // Sim! Chama a função para executar a operação desejada
+                        flagMarcaOperacao = 3;
+                        ZerarArray(tranforma_char_int, valor_Digitado);    //sim! Zera os arrays valor_Digitado[] e tranforma_char_int[]
                     }
                 }
                 break;
@@ -110,12 +131,15 @@ int main() {
                         break;                           // Não! Ignora o caractere inserido
                     }
                     else {
-                        operacao(&resultadoOperacao);  // Sim! Chama a função para executar a operação desejada
+                        operacao(operandos);  // Sim! Chama a função para executar a operação desejada
+                        flagMarcaOperacao = 4;
+                        ZerarArray(tranforma_char_int, valor_Digitado);    //sim! Zera os arrays valor_Digitado[] e tranforma_char_int[]
                     }
                 }
                 break;
+
             case '\n':
-                operacao(&resultadoOperacao);
+                operacao(operandos);
                 break;
              default:
                  break;
@@ -215,21 +239,24 @@ int Transformacao(char entrada, char valor_digitado[], int tranforma_char_int[])
 }
 
 
-void operacao(long int *resultadoOperacao) {
+void operacao(long int operandos[]) {
 
     switch (flagMarcaOperacao)
     {
     case 1:
-        printf_s("\nusuário solicitou a operação SOMA\n");
+        operandos[0] = operandos[0] + operandos[1];
         break;
     case 2:
-        printf_s("\nusuário solicitou a operação SUBTRAÇÃO\n");
+        operandos[0] = operandos[0] - operandos[1];
         break;
     case 3:
-        printf_s("\nusuário solicitou a operação DIVISÃO\n");
+        operandos[0] = operandos[0] * operandos[1];
         break;
     case 4:
-        printf_s("\nusuário solicitou a operação MULTIPLICAÇÃO\n");
+        operandos[0] = operandos[0] / operandos[1];
+        break;
+    case 5:
+        printf_s("\nusuário solicitou a operação resultado\n");
         break;
     default:
         break;
@@ -245,5 +272,10 @@ void ZerarArray(int tranforma_char_int[], char valor_Digitado[]) {
         tranforma_char_int[itera] = 0;
         valor_Digitado[itera] = '_';
     } 
+    return;
+}
+
+void MostraOperandos(long int operandos[]) {
+
     return;
 }
